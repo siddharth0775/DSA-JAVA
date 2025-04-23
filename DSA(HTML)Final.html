@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #2e8b57;
+        }
+        label, select, input, button {
+            margin: 10px 0;
+            width: 100%;
+        }
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 Crop Recommendation System</h1>
+
+        <label for="crop">Enter Crop Name:</label>
+        <input type="text" id="crop" placeholder="e.g. Rice">
+
+        <label for="zoneId">Enter Zone ID:</label>
+        <input type="number" id="zoneId" placeholder="e.g. 2003">
+
+        <button onclick="checkHealth()">Check Crop Suitability</button>
+
+        <label for="month">Select Month (Optional):</label>
+        <select id="month">
+            <option value="">-- Select Month --</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+
+        <button onclick="recommendSeason()">Recommend Crops by Season</button>
+
+        <h3>📍 Recommendation Result</h3>
+        <textarea id="output" readonly></textarea>
+    </div>
+
+    <script>
+        const suggestions = {
+            "rice-2003": "✅ Suitable! Zone 2003 has good nitrogen and temperature for rice.",
+            "wheat-2001": "⚠️ Not Ideal. Zone 2001 lacks proper moisture for wheat. Try barley or gram instead.",
+            "maize-2005": "✅ Suitable! Great match for maize in Zone 2005.",
+            "cotton-2004": "⚠️ Cotton may not grow well in Zone 2004 due to low potassium.",
+        };
+
+        function checkHealth() {
+            const crop = document.getElementById('crop').value.trim().toLowerCase();
+            const zoneId = document.getElementById('zoneId').value.trim();
+            const key = `${crop}-${zoneId}`;
+            const result = suggestions[key] || "❌ No data available for this crop and zone. Please try another.";
+            document.getElementById('output').value = result;
+        }
+
+        function recommendSeason() {
+            const month = parseInt(document.getElementById('month').value);
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1;
+            const usedMonth = isNaN(month) ? currentMonth : month;
+
+            let season = 'Unknown';
+            let crops = [];
+
+            if ([6, 7, 8, 9].includes(usedMonth)) {
+                season = 'Kharif';
+                crops = ['rice', 'maize', 'cotton', 'soybean'];
+            } else if ([10, 11, 12, 1].includes(usedMonth)) {
+                season = 'Rabi';
+                crops = ['wheat', 'barley', 'gram', 'mustard'];
+            } else if ([2, 3, 4, 5].includes(usedMonth)) {
+                season = 'Zaid';
+                crops = ['melon', 'cucumber', 'bitter gourd', 'ridge gourd'];
+            }
+
+            document.getElementById('output').value = 
+                `🌾 Season: ${season}\n✅ Recommended Crops: ${crops.join(', ')}`;
+        }
+    </script>
+</body>
+</html>
